@@ -1,26 +1,18 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f3ec;--surface:#fdfaf5;--card:#fff;
+  --ink:#1e1b17;--mid:#5a5248;--muted:#9a9088;--border:#e4ddd4;--border2:#d4c8b8;
+  --teal:#2a7f6f;--teal-light:#e8f4f1;--teal-mid:#b5ddd6;--teal-dark:#1d6058;
+  --amber:#c87c1a;--amber-light:#fdf3e3;
+  --rose:#c0392b;--rose-light:#fdecea;
+  --green:#27ae60;--green-light:#e8f8ee;
+  --a2-bg:#ddf2ec;--a2-text:#1a6b55;
+  --b1-bg:#fff0d4;--b1-text:#8a5200;
+  --shadow:0 4px 20px rgba(30,27,23,.08),0 1px 4px rgba(30,27,23,.04);
+  --shadow-lg:0 12px 40px rgba(30,27,23,.15),0 2px 8px rgba(30,27,23,.06);
 }
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:'Nunito Sans',sans-serif;color:var(--ink);font-size:16px;line-height:1.7;min-height:100vh}
+a{text-decoration:none;color:inherit}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%{transform:scale(0) rotate(-10deg)}60%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0)}}

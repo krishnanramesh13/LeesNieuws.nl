@@ -20,12 +20,12 @@ export async function POST(req: Request) {
     }
 
     await resend.emails.send({
-      from: 'LeesNieuws <onboarding@resend.dev>',
+      from: 'NieuwsLeren <onboarding@resend.dev>',
       to: receiveEmail,
       subject: `Nieuw bericht van ${naam}`,
       html: `
         <div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:24px">
-          <h2 style="color:#2a7f6f;margin-bottom:16px">Nieuw bericht via LeesNieuws.nl</h2>
+          <h2 style="color:#2a7f6f;margin-bottom:16px">Nieuw bericht via NieuwsLeren.nl</h2>
           <table style="width:100%;border-collapse:collapse">
             <tr style="border-bottom:1px solid #e4ddd4">
               <td style="padding:10px 0;font-weight:700;color:#5a5248;width:100px">Naam</td>
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
               <td style="padding:10px 0;color:#1e1b17;line-height:1.6">${bericht.replace(/\n/g, '<br/>')}</td>
             </tr>
           </table>
-          <p style="margin-top:24px;font-size:12px;color:#9a9088">Verzonden via LeesNieuws.nl contactformulier</p>
+          <p style="margin-top:24px;font-size:12px;color:#9a9088">Verzonden via NieuwsLeren.nl contactformulier</p>
         </div>
       `,
       replyTo: email,

@@ -1,1 +1,1 @@
-# LeesNieuws.nl
+# NieuwsLeren.nl

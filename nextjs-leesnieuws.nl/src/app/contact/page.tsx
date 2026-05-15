@@ -39,7 +39,7 @@ export default function ContactPage() {
         <div style={{ maxWidth: 1060, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', height: 62 }}>
           <a href="/" style={{ textDecoration: 'none' }}>
             <div style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 700, letterSpacing: '-.5px', color: 'var(--ink)' }}>
-              Lees<span style={{ color: 'var(--teal)' }}>Nieuws</span>
+              Nieuws<span style={{ color: 'var(--teal)' }}>Leren</span>
             </div>
             <div style={{ fontFamily: "'Nunito',sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: '.18em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 1 }}>
               Eenvoudig Nederlands leren

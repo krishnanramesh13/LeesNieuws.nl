@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'LeesNieuws — Eenvoudig Nederlands',
+  title: 'NieuwsLeren — Eenvoudig Nederlands',
   description: 'Dagelijks nieuws in eenvoudig Nederlands voor A2 en B1 leerders.',
   icons: {
     icon: '/favicon.svg',

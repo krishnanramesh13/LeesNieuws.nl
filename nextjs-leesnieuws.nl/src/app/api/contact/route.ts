@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     }
 
     await resend.emails.send({
-      from: 'NieuwsLeren <onboarding@resend.dev>',
+      from: 'NieuwsLeren <info@nieuwsleren.nl>',
       to: receiveEmail,
       subject: `Nieuw bericht van ${naam}`,
       html: `

@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <rect width="120" height="120" rx="24" fill="#2a7f6f"/>
-  <circle cx="60" cy="56" r="38" fill="#1d6058"/>
-  <text x="36" y="76" font-family="Georgia,serif" font-size="42" font-weight="700" fill="#ffffff">L</text>
-  <text x="62" y="76" font-family="Georgia,serif" font-size="42" font-weight="700" fill="#7de8d8">N</text>
-  <circle cx="60" cy="98" r="4" fill="#7de8d8"/>
+  <rect width="120" height="120" rx="22" fill="#1a7a5e"/>
+  <circle cx="60" cy="52" r="36" fill="#145e48"/>
+  <text x="14" y="74" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#ffffff">N</text>
+  <text x="60" y="74" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#7de8c8">L</text>
 </svg>

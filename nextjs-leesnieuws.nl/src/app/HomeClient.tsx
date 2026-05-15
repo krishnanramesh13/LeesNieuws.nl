@@ -215,7 +215,7 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
       <header className="site-header">
         <div className="header-inner">
           <div onClick={() => { setOpenId(null); setCategoryFilter('all'); setLevelFilter('all') }} style={{ cursor: 'pointer' }}>
-            <div className="logo-title">Lees<span>Nieuws</span></div>
+            <div className="logo-title">Nieuws<span>Leren</span></div>
             <div className="logo-sub">Eenvoudig Nederlands leren</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -429,7 +429,7 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
       <footer className="site-footer">
         <div className="footer-inner">
           <div>
-            <div className="footer-logo">Lees<span>Nieuws</span></div>
+            <div className="footer-logo">Nieuws<span>Leren</span></div>
             <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2, fontFamily: "'Nunito',sans-serif", letterSpacing: '.1em', textTransform: 'uppercase' }}>
               Eenvoudig Nederlands leren · A2 & B1
             </div>
@@ -439,7 +439,7 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
             <a href="/contact" className="footer-link">Contact</a>
             <a href="/privacy" className="footer-link">Privacybeleid</a>
           </div>
-          <div className="footer-copy">© {new Date().getFullYear()} LeesNieuws.nl</div>
+          <div className="footer-copy">© {new Date().getFullYear()} NieuwsLeren.nl</div>
         </div>
       </footer>
 

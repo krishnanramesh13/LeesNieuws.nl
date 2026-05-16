@@ -1,15 +1,18 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'NieuwsLeren — Eenvoudig Nederlands',
   description: 'Dagelijks nieuws in eenvoudig Nederlands voor A2 en B1 leerders.',
-  icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
-  },
-}
+    icons: {
+      icon: [
+        { url: '/icon.svg', type: 'image/svg+xml' },
+      ],
+      shortcut: '/icon.svg',
+      apple: '/icon.svg',
+    },
+  }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

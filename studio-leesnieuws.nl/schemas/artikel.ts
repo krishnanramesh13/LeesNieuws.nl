@@ -5,8 +5,16 @@ export default {
   fields: [
     { name: 'kop', title: 'Kop (Headline)', type: 'string', validation: (Rule: any) => Rule.required() },
     {
-      name: 'niveau', title: 'Niveau', type: 'string',
-      options: { list: [{ title: 'A2 — Basis', value: 'a2' }, { title: 'B1 — Gevorderd', value: 'b1' }] },
+      name: 'niveau',
+      title: 'Niveau',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'A2 — Basis', value: 'a2' },
+          { title: 'A2+ — Tussenniveau', value: 'a2plus' },
+          { title: 'B1 — Gevorderd', value: 'b1' }
+        ]
+      },
       initialValue: 'a2'
     },
     {

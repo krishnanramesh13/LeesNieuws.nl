@@ -108,6 +108,67 @@ REGELS voor A2:
   return parsed
 }
 
+// ── REWRITE A2+ ──
+async function rewriteA2Plus(article) {
+  console.log(`✍️ [A2+] Rewriting: ${article.title}`)
+
+  const prompt = `Je bent een Nederlandse taalleraar die nieuws schrijft voor A2+ taalleerders. Dit is een niveau tussen A2 en B1 — iets moeilijker dan A2 maar nog niet zo complex als B1.
+
+Origineel artikel: "${article.title}"
+Originele tekst: "${article.content}"
+
+Herschrijf dit als een boeiend nieuwsverhaal voor A2+ taalleerders. Gebruik wat langere zinnen dan A2 maar blijf toegankelijk. Voeg wat meer context en details toe.
+
+Geef ALLEEN dit JSON terug (geen markdown):
+{
+  "kop": "Pakkende kop (max 10 woorden)",
+  "ondertitel": "Informatieve ondertitel die nieuwsgierig maakt (max 15 woorden)",
+  "niveau": "a2plus",
+  "categorie": "één van: nederland, wereld, natuur, cultuur, sport, klimaat, economie, gezondheid",
+  "leestijd": 3,
+  "tekst": [
+    "Zin 1: Introduceer de situatie met wat context. Gebruik max 12 woorden.",
+    "Zin 2: Vertel wat er precies is gebeurd. Geef een detail. Max 12 woorden.",
+    "Zin 3: Wie is erbij betrokken en wat is de achtergrond? Max 12 woorden.",
+    "Zin 4: Wat zijn de gevolgen of reacties? Gebruik een citaat of mening. Max 12 woorden.",
+    "Zin 5: Wat betekent dit voor de toekomst? Sluit het verhaal af. Max 12 woorden.",
+    "Zin 6: Extra context of interessant detail dat het verhaal compleet maakt. Max 12 woorden.",
+    "Zin 7: Conclusie of vooruitblik. Wat kunnen we verwachten? Max 12 woorden."
+  ],
+  "woordenlijst": [
+    {"woord": "werkwoord1", "betekenis": "to [english verb]", "type": "verb"},
+    {"woord": "werkwoord2", "betekenis": "to [english verb]", "type": "verb"},
+    {"woord": "werkwoord3", "betekenis": "to [english verb]", "type": "verb"},
+    {"woord": "zelfstandignaamwoord1", "betekenis": "english meaning", "type": "noun"},
+    {"woord": "zelfstandignaamwoord2", "betekenis": "english meaning", "type": "noun"},
+    {"woord": "zelfstandignaamwoord3", "betekenis": "english meaning", "type": "noun"},
+    {"woord": "bijvoeglijknaamwoord1", "betekenis": "english meaning", "type": "adjective"},
+    {"woord": "uitdrukking1", "betekenis": "english meaning + short explanation", "type": "uitdrukking"}
+  ]
+}
+
+REGELS voor A2+:
+- EXACT 7 zinnen in tekst array
+- Zinnen zijn iets langer dan A2 maar max 12 woorden
+- Gebruik gewone Nederlandse woorden maar voeg 2-3 iets moeilijkere woorden toe
+- Schrijf als een boeiend verhaal met meer details dan A2
+- EXACT 8 woorden in woordenlijst: 3 werkwoorden + 3 zelfstandige naamwoorden + 1 bijvoeglijk naamwoord + 1 uitdrukking
+- Geef ALLEEN JSON terug`
+
+  const response = await groq.chat.completions.create({
+    model: config.groq.model,
+    messages: [{ role: 'user', content: prompt }],
+    temperature: config.groq.temperature,
+    max_tokens: config.groq.maxTokens,
+  })
+
+  const text = response.choices[0].message.content.trim()
+  const clean = text.replace(/```json|```/g, '').trim()
+  const parsed = JSON.parse(clean)
+  parsed._niveau = 'a2plus'
+  return parsed
+}
+
 // ── REWRITE B1 ──
 async function rewriteB1(article) {
   console.log(`✍️ [B1] Rewriting: ${article.title}`)
@@ -210,51 +271,48 @@ async function sendNotification(saved) {
   if (!config.notification.sendEmail) return
   console.log('📧 Sending notification...')
 
-  const a2Articles = saved.filter(a => a.niveau === 'a2')
-  const b1Articles = saved.filter(a => a.niveau === 'b1')
+    const a2Articles = saved.filter(a => a.niveau === 'a2')
+    const a2PlusArticles = saved.filter(a => a.niveau === 'a2plus')
+    const b1Articles = saved.filter(a => a.niveau === 'b1')
 
-  const makeList = (items) => items.map((a, i) => `
-    <tr>
-      <td style="padding:7px 12px;border-bottom:1px solid #e4ddd4;font-size:13px">${i + 1}</td>
-      <td style="padding:7px 12px;border-bottom:1px solid #e4ddd4;font-size:13px">${a.title}</td>
-    </tr>`).join('')
-
-  await resend.emails.send({
+    await resend.emails.send({
     from: 'NieuwsLeren Pipeline <info@nieuwsleren.nl>',
     to: process.env.RECEIVE_EMAIL,
-    subject: `✅ ${saved.length} artikelen klaar — ${a2Articles.length}× A2 + ${b1Articles.length}× B1`,
+    subject: `✅ ${saved.length} artikelen klaar — ${a2Articles.length}× A2 + ${a2PlusArticles.length}× A2+ + ${b1Articles.length}× B1`,
     html: `
-      <div style="font-family:sans-serif;max-width:580px;margin:0 auto;padding:24px">
+        <div style="font-family:sans-serif;max-width:580px;margin:0 auto;padding:24px">
         <div style="background:#1a7a5e;padding:20px 24px;border-radius:10px 10px 0 0;text-align:center">
-          <h1 style="color:#fff;margin:0;font-size:22px">NieuwsLeren Pipeline</h1>
-          <p style="color:rgba(255,255,255,.75);margin:6px 0 0;font-size:13px">${new Date().toLocaleDateString('nl-NL', { weekday:'long', day:'numeric', month:'long' })}</p>
+            <h1 style="color:#fff;margin:0;font-size:22px">NieuwsLeren Pipeline</h1>
+            <p style="color:rgba(255,255,255,.75);margin:6px 0 0;font-size:13px">${new Date().toLocaleDateString('nl-NL', { weekday:'long', day:'numeric', month:'long' })}</p>
         </div>
         <div style="background:#fdfaf5;border:1px solid #e4ddd4;border-top:none;padding:24px;border-radius:0 0 10px 10px">
-          <p style="font-size:15px;margin:0 0 20px;color:#1a1410">
-            🎉 <strong>${saved.length} nieuwe artikelen</strong> staan klaar als draft in Sanity Studio!
-          </p>
+            <p style="font-size:15px;margin:0 0 20px;color:#1a1410">
+            🎉 <strong>${saved.length} nieuwe artikelen</strong> staan klaar als draft!
+            </p>
 
-          <div style="background:#ddf2ec;border-radius:8px;padding:12px 16px;margin-bottom:16px">
+            <div style="background:#ddf2ec;border-radius:8px;padding:12px 16px;margin-bottom:12px">
             <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a7a5e;margin-bottom:8px">A2 — Basis (${a2Articles.length} artikelen)</div>
             <table style="width:100%;border-collapse:collapse">${makeList(a2Articles)}</table>
-          </div>
+            </div>
 
-          <div style="background:#fff0d4;border-radius:8px;padding:12px 16px;margin-bottom:20px">
+            <div style="background:#e8f4f1;border-radius:8px;padding:12px 16px;margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a6b55;margin-bottom:8px">A2+ — Tussenniveau (${a2PlusArticles.length} artikelen)</div>
+            <table style="width:100%;border-collapse:collapse">${makeList(a2PlusArticles)}</table>
+            </div>
+
+            <div style="background:#fff0d4;border-radius:8px;padding:12px 16px;margin-bottom:20px">
             <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8a5200;margin-bottom:8px">B1 — Gevorderd (${b1Articles.length} artikelen)</div>
             <table style="width:100%;border-collapse:collapse">${makeList(b1Articles)}</table>
-          </div>
+            </div>
 
-          <a href="https://nieuwsleren.sanity.studio"
+            <a href="https://nieuwsleren.sanity.studio"
             style="display:block;text-align:center;background:#1a7a5e;color:#fff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">
             📝 Open Sanity Studio →
-          </a>
-          <p style="font-size:11px;color:#9a9088;text-align:center;margin-top:12px">
-            Bekijk, bewerk en publiceer de artikelen in Sanity Studio.
-          </p>
+            </a>
         </div>
-      </div>
+        </div>
     `,
-  })
+    })
 }
 
 // ── MAIN ──
@@ -269,50 +327,69 @@ async function main() {
     console.log(`✅ Total fetched: ${news.length} articles`)
     if (news.length === 0) { console.log('❌ No articles. Exiting.'); return }
 
-    // 2. Split into A2 and B1 batches
+    // 2. Split into A2, A2+ and B1 batches
     const a2News = news.slice(0, config.pipeline.totalA2Articles)
-    const b1News = news.slice(config.pipeline.totalA2Articles, config.pipeline.totalA2Articles + config.pipeline.totalB1Articles)
+    const a2PlusNews = news.slice(
+    config.pipeline.totalA2Articles,
+    config.pipeline.totalA2Articles + config.pipeline.totalA2PlusArticles
+    )
+    const b1News = news.slice(
+    config.pipeline.totalA2Articles + config.pipeline.totalA2PlusArticles,
+    config.pipeline.totalA2Articles + config.pipeline.totalA2PlusArticles + config.pipeline.totalB1Articles
+    )
 
     // 3. Rewrite A2 articles
     console.log('\n📗 Processing A2 articles...')
     const a2Rewritten = []
     for (const article of a2News) {
-      try {
+    try {
         const result = await rewriteA2(article)
         a2Rewritten.push(result)
         await new Promise(r => setTimeout(r, config.pipeline.delayBetweenArticles))
-      } catch (e) {
+    } catch (e) {
         console.log(`⚠️ A2 failed: ${article.title} — ${e.message}`)
-      }
+    }
     }
 
-    // 4. Rewrite B1 articles
+    // 4. Rewrite A2+ articles
+    console.log('\n📙 Processing A2+ articles...')
+    const a2PlusRewritten = []
+    for (const article of a2PlusNews) {
+    try {
+        const result = await rewriteA2Plus(article)
+        a2PlusRewritten.push(result)
+        await new Promise(r => setTimeout(r, config.pipeline.delayBetweenArticles))
+    } catch (e) {
+        console.log(`⚠️ A2+ failed: ${article.title} — ${e.message}`)
+    }
+    }
+
+    // 5. Rewrite B1 articles
     console.log('\n📘 Processing B1 articles...')
     const b1Rewritten = []
     for (const article of b1News) {
-      try {
+    try {
         const result = await rewriteB1(article)
         b1Rewritten.push(result)
         await new Promise(r => setTimeout(r, config.pipeline.delayBetweenArticles))
-      } catch (e) {
+    } catch (e) {
         console.log(`⚠️ B1 failed: ${article.title} — ${e.message}`)
-      }
+    }
     }
 
-    console.log(`\n✅ Rewrote: ${a2Rewritten.length} A2 + ${b1Rewritten.length} B1`)
+    console.log(`\n✅ Rewrote: ${a2Rewritten.length} A2 + ${a2PlusRewritten.length} A2+ + ${b1Rewritten.length} B1`)
 
-    // 5. Save all to Sanity as drafts
+    // 6. Save all to Sanity as drafts
     console.log('\n💾 Saving to Sanity...')
     const saved = []
-    for (const article of [...a2Rewritten, ...b1Rewritten]) {
-      try {
+    for (const article of [...a2Rewritten, ...a2PlusRewritten, ...b1Rewritten]) {
+    try {
         const result = await saveToDraft(article)
         saved.push(result)
-      } catch (e) {
+    } catch (e) {
         console.log(`⚠️ Save failed: ${article.kop} — ${e.message}`)
-      }
     }
-    console.log(`✅ Saved ${saved.length} drafts`)
+    }
 
     // 6. Send email
     if (saved.length > 0) {

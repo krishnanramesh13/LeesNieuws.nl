@@ -65,6 +65,82 @@ function WordChip({ woord, betekenis }: { woord: string; betekenis: string }) {
   )
 }
 
+function InlineWord({ word, meaning }: { word: string; meaning: string }) {
+  const [show, setShow] = useState(false)
+  return (
+    <span style={{ position: 'relative', display: 'inline' }}>
+      <span
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        style={{
+          borderBottom: '2px dotted var(--teal)',
+          cursor: 'help',
+          color: 'inherit',
+          transition: 'color .15s',
+        }}>
+        {word}
+      </span>
+      {show && (
+        <span style={{
+          position: 'absolute',
+          bottom: '120%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#1a1410',
+          color: '#fff',
+          padding: '5px 10px',
+          borderRadius: 6,
+          fontSize: 12,
+          fontFamily: "'Nunito',sans-serif",
+          fontWeight: 600,
+          whiteSpace: 'nowrap',
+          zIndex: 999,
+          boxShadow: '0 4px 16px rgba(0,0,0,.25)',
+          pointerEvents: 'none',
+        }}>
+          {word} = {meaning}
+          <span style={{
+            position: 'absolute',
+            top: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '5px solid transparent',
+            borderRight: '5px solid transparent',
+            borderTop: '5px solid #1a1410',
+          }} />
+        </span>
+      )}
+    </span>
+  )
+}
+
+function highlightWords(text: string, woordenlijst: Woord[]) {
+  if (!woordenlijst || woordenlijst.length === 0) return <>{text}</>
+
+  // Build a map of word → meaning (case insensitive)
+  const wordMap = new Map<string, string>()
+  woordenlijst.forEach(w => {
+    wordMap.set(w.woord.toLowerCase(), w.betekenis)
+  })
+
+  // Split text into parts matching vocabulary words
+  const words = text.split(/(\s+|[.,!?;:()"])/)
+  
+  return (
+    <>
+      {words.map((part, i) => {
+        const clean = part.toLowerCase().replace(/[.,!?;:()"]/g, '')
+        if (wordMap.has(clean)) {
+          return <InlineWord key={i} word={part} meaning={wordMap.get(clean)!} />
+        }
+        return <span key={i}>{part}</span>
+      })}
+    </>
+  )
+}
+
 export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wotd: WoordVanDeDag | null }) {
   const [openId, setOpenId] = useState<string | null>(null)
   const [levelFilter, setLevelFilter] = useState('all')
@@ -165,6 +241,9 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
         .level-btn.all.active{border-color:var(--ink);color:var(--ink)}
         .level-btn.a2{background:var(--a2-bg);color:var(--a2-text);border-color:var(--a2-bg)}
         .level-btn.a2.active{border-color:var(--a2-text)}
+        .level-btn.a2plus{background:#e0f0ec;color:#1a6b55;border-color:#e0f0ec}
+        .level-btn.a2plus.active{border-color:#1a6b55}
+        .level-badge.a2plus{background:#e0f0ec;color:#1a6b55}
         .level-btn.b1{background:var(--b1-bg);color:var(--b1-text);border-color:var(--b1-bg)}
         .level-btn.b1.active{border-color:var(--b1-text)}
         .cat-bar{background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto}
@@ -219,10 +298,10 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
             <div className="logo-sub">Eenvoudig Nederlands leren</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {['all', 'a2', 'b1'].map(l => (
+            {['all', 'a2', 'a2plus', 'b1'].map(l => (
               <button key={l} className={`level-btn ${l} ${levelFilter === l ? 'active' : ''}`}
                 onClick={() => { setLevelFilter(l); setOpenId(null) }}>
-                {l === 'all' ? 'Alles' : l.toUpperCase()}
+                {l === 'all' ? 'Alles' : l === 'a2plus' ? 'A2+' : l.toUpperCase()}
               </button>
             ))}
           </div>
@@ -269,7 +348,9 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
                   style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 8, marginBottom: 20, display: 'block' }} />
               )}
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
-                <span className={`level-badge ${openArticle.niveau || 'a2'}`}>{(openArticle.niveau || 'A2').toUpperCase()}</span>
+                <span className={`level-badge ${openArticle.niveau === 'a2plus' ? 'a2plus' : openArticle.niveau || 'a2'}`}>
+                  {openArticle.niveau === 'a2plus' ? 'A2+' : (openArticle.niveau || 'A2').toUpperCase()}
+                </span>
                 <span className="topic-tag">{openArticle.categorie}</span>
                 {openArticle.leestijd && <span className="read-time">⏱ {openArticle.leestijd} min</span>}
                 <span style={{ fontSize: 11, color: 'var(--muted)', marginLeft: 'auto' }}>{formatDate(openArticle.datum)}</span>
@@ -281,7 +362,26 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
                 <p style={{ fontSize: 16, color: 'var(--mid)', marginBottom: 20, lineHeight: 1.6 }}>{openArticle.ondertitel}</p>
               )}
               <div className="card-body">
-                {openArticle.tekst && <PortableText value={openArticle.tekst} />}
+                {openArticle.tekst && (
+                  <PortableText
+                    value={openArticle.tekst}
+                    components={{
+                      block: {
+                        normal: ({ children, value }) => {
+                          // Extract plain text from the block
+                          const text = value.children
+                            ?.map((child: any) => child.text || '')
+                            .join('') || ''
+                          return (
+                            <p style={{ marginBottom: 14 }}>
+                              {highlightWords(text, openArticle.woordenlijst || [])}
+                            </p>
+                          )
+                        }
+                      }
+                    }}
+                  />
+                )}
               </div>
               <div className="card-footer" style={{ marginTop: 16 }}>
                 <div style={{ width: '100%', background: 'var(--teal-light)', border: '1px solid var(--teal-mid)', borderRadius: 12, padding: '14px 16px', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -342,12 +442,18 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
                       onClick={() => setOpenId(a._id)} />
                   )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
-                    <span className={`level-badge ${a.niveau || 'a2'}`}>{(a.niveau || 'A2').toUpperCase()}</span>
+                    <span className={`level-badge ${a.niveau === 'a2plus' ? 'a2plus' : a.niveau || 'a2'}`}>
+                        {a.niveau === 'a2plus' ? 'A2+' : a.niveau === 'a2plus' ? 'A2+' : (a.niveau || 'A2').toUpperCase()}
+                    </span>
                     <span className="topic-tag">{a.categorie}</span>
                     {a.leestijd && <span className="read-time">⏱ {a.leestijd} min</span>}
                   </div>
                   <h2 className="card-title" onClick={() => setOpenId(a._id)}>{a.kop}</h2>
-                  {a.ondertitel && <p className="card-body" style={{ marginBottom: 10 }}>{a.ondertitel}</p>}
+                  {a.ondertitel && (
+                    <p className="card-body" style={{ marginBottom: 10 }}>
+                      {highlightWords(a.ondertitel, a.woordenlijst || [])}
+                    </p>
+                  )}
                   <div className="card-footer">
                     <button className="audio-btn" onClick={() => speakText(a.kop + '. ' + (a.ondertitel || ''))}>
                       <svg viewBox="0 0 24 24" style={{ width: 14, height: 14, fill: 'var(--teal)', flexShrink: 0 }}>

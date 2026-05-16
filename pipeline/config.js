@@ -54,11 +54,12 @@ module.exports = {
   ],
 
   // ── PIPELINE SETTINGS ──
-  pipeline: {
-    totalA2Articles: 3,          // number of A2 articles per day
-    totalB1Articles: 3,          // number of B1 articles per day
-    delayBetweenArticles: 1500,  // ms delay between Groq API calls
-  },
+    pipeline: {
+    totalA2Articles: 2,
+    totalA2PlusArticles: 2,
+    totalB1Articles: 2,
+    delayBetweenArticles: 1500,
+    },
 
   // ── PREFERRED TOPICS (Netherlands focused) ──
   // Pipeline will try to find articles matching these topics

@@ -244,7 +244,7 @@ async function sendNotification(saved) {
             <table style="width:100%;border-collapse:collapse">${makeList(b1Articles)}</table>
           </div>
 
-          <a href="https://leesnieuws.sanity.studio"
+          <a href="https://nieuwsleren.sanity.studio"
             style="display:block;text-align:center;background:#1a7a5e;color:#fff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">
             📝 Open Sanity Studio →
           </a>

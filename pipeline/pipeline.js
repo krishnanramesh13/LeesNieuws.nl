@@ -275,6 +275,13 @@ async function sendNotification(saved) {
     const a2PlusArticles = saved.filter(a => a.niveau === 'a2plus')
     const b1Articles = saved.filter(a => a.niveau === 'b1')
 
+    // ← ADD THIS FUNCTION HERE
+    const makeList = (items) => items.map((a, i) => `
+        <tr>
+        <td style="padding:7px 12px;border-bottom:1px solid #e4ddd4;font-size:13px">${i + 1}</td>
+        <td style="padding:7px 12px;border-bottom:1px solid #e4ddd4;font-size:13px">${a.title}</td>
+        </tr>`).join('')
+
     await resend.emails.send({
     from: 'NieuwsLeren Pipeline <info@nieuwsleren.nl>',
     to: process.env.RECEIVE_EMAIL,

@@ -293,7 +293,7 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
       {/* HEADER */}
       <header className="site-header">
         <div className="header-inner">
-          <div onClick={() => { setOpenId(null); setCategoryFilter('all'); setLevelFilter('all') }} style={{ cursor: 'pointer' }}>
+          <div onClick={() => { setOpenId(null); setCategoryFilter('all'); setLevelFilter('all'); window.scrollTo({ top: 0, behavior: 'smooth' }) }} style={{ cursor: 'pointer' }}>
             <div className="logo-title">Nieuws<span>Leren</span></div>
             <div className="logo-sub">Eenvoudig Nederlands leren</div>
           </div>

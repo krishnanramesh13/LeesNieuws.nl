@@ -537,7 +537,7 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
           <div>
             <div className="footer-logo">Nieuws<span>Leren</span></div>
             <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2, fontFamily: "'Nunito',sans-serif", letterSpacing: '.1em', textTransform: 'uppercase' }}>
-              Eenvoudig Nederlands leren · A2 & B1
+              Eenvoudig Nederlands leren · A2, A2+, B1
             </div>
           </div>
           <div className="footer-links">
@@ -548,6 +548,31 @@ export default function HomeClient({ artikels, wotd }: { artikels: Artikel[], wo
           <div className="footer-copy">© {new Date().getFullYear()} NieuwsLeren.nl</div>
         </div>
       </footer>
+
+      {/* FEEDBACK BUTTON */}
+      <a href="https://tally.so/r/EkZD0N"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          background: 'var(--teal)',
+          color: '#fff',
+          fontFamily: "'Nunito',sans-serif",
+          fontSize: 13,
+          fontWeight: 700,
+          padding: '10px 18px',
+          borderRadius: 24,
+          textDecoration: 'none',
+          boxShadow: '0 4px 20px rgba(26,122,94,.4)',
+          zIndex: 900,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+        }}>
+        💬 Feedback
+      </a>
 
       {/* TOAST */}
       <div className={`toast-el ${toast ? 'show' : ''}`}>{toast}</div>

@@ -27,3 +27,8 @@
 
 # Dotenv and similar local-only files
 *.local
+
+
+manual.js
+deleteAll.js
+cleanup.js

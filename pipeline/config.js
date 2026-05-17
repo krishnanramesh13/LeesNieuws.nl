@@ -73,6 +73,38 @@ module.exports = {
       articlesPerFeed: 1,
       defaultCategory: 'nederland',
     },
+    // AD.nl
+    {
+    name: 'AD Nieuws',
+    url: 'https://www.ad.nl/nieuws/rss.xml',
+    enabled: false,
+    articlesPerFeed: 1,
+    defaultCategory: 'nederland',
+    },
+    // RTL Nieuws
+    {
+    name: 'RTL Nieuws',
+    url: 'https://www.rtlnieuws.nl/rss.xml',
+    enabled: false,
+    articlesPerFeed: 1,
+    defaultCategory: 'nederland',
+    },
+    // Volkskrant
+    {
+    name: 'Volkskrant',
+    url: 'https://www.volkskrant.nl/rss.xml',
+    enabled: false,
+    articlesPerFeed: 1,
+    defaultCategory: 'nederland',
+    },
+    // NRC
+    {
+    name: 'NRC',
+    url: 'https://www.nrc.nl/rss/',
+    enabled: false,
+    articlesPerFeed: 1,
+    defaultCategory: 'nederland',
+    },
 
     // ── WORLD NEWS (disabled by default) ──
     {

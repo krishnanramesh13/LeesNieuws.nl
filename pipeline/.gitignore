@@ -1,2 +1,6 @@
 .env
 node_modules/
+
+manual.js
+deleteAll.js
+cleanup.js

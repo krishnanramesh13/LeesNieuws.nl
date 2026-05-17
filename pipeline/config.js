@@ -2,19 +2,34 @@ module.exports = {
 
   // ── NEWS SOURCES (Netherlands focused) ──
   sources: [
+    // ── NETHERLANDS FOCUSED ──
     {
-      name: 'NOS Algemeen',
-      url: 'https://feeds.nos.nl/nosnieuwsalgemeen',
+      name: 'NOS Binnenland',
+      url: 'https://feeds.nos.nl/nosnieuwsbinnenland',
       enabled: true,
       articlesPerFeed: 3,
       defaultCategory: 'nederland',
     },
     {
-      name: 'NOS Binnenland',
-      url: 'https://feeds.nos.nl/nosnieuwsbinnenland',
+      name: 'NOS Algemeen',
+      url: 'https://feeds.nos.nl/nosnieuwsalgemeen',
       enabled: true,
       articlesPerFeed: 2,
       defaultCategory: 'nederland',
+    },
+    {
+      name: 'NOS Politiek',
+      url: 'https://feeds.nos.nl/nosnieuwspolitiek',
+      enabled: true,
+      articlesPerFeed: 1,
+      defaultCategory: 'nederland',
+    },
+    {
+      name: 'NOS Economie',
+      url: 'https://feeds.nos.nl/nosnieuwseconomie',
+      enabled: true,
+      articlesPerFeed: 1,
+      defaultCategory: 'economie',
     },
     {
       name: 'NOS Sport',
@@ -47,37 +62,46 @@ module.exports = {
     {
       name: 'NU.nl Economie',
       url: 'https://www.nu.nl/rss/Economie',
-      enabled: false,
+      enabled: true,
       articlesPerFeed: 1,
       defaultCategory: 'economie',
+    },
+    {
+      name: 'Telegraaf Nieuws',
+      url: 'https://www.telegraaf.nl/nieuws/rss',
+      enabled: true,
+      articlesPerFeed: 1,
+      defaultCategory: 'nederland',
+    },
+
+    // ── WORLD NEWS (disabled by default) ──
+    {
+      name: 'NOS Buitenland',
+      url: 'https://feeds.nos.nl/nosnieuwsbuitenland',
+      enabled: false,
+      articlesPerFeed: 1,
+      defaultCategory: 'wereld',
+    },
+    {
+      name: 'NU.nl Buitenland',
+      url: 'https://www.nu.nl/rss/Buitenland',
+      enabled: false,
+      articlesPerFeed: 1,
+      defaultCategory: 'wereld',
     },
   ],
 
   // ── PIPELINE SETTINGS ──
-    pipeline: {
+  pipeline: {
     totalA2Articles: 2,
     totalA2PlusArticles: 2,
     totalB1Articles: 2,
     delayBetweenArticles: 1500,
-    },
 
-  // ── PREFERRED TOPICS (Netherlands focused) ──
-  // Pipeline will try to find articles matching these topics
-  preferredTopics: [
-    'openbaar vervoer',
-    'gezondheid',
-    'misdaad',
-    'belasting',
-    'woningmarkt',
-    'huurmarkt',
-    'festivals',
-    'concerten',
-    'overheid',
-    'koning',
-    'klimaat',
-    'sport',
-    'zorg',
-  ],
+    // Filter: only use articles that mention Netherlands
+    // This prevents world news sneaking in
+    preferNetherlandsNews: true,
+  },
 
   // ── NOTIFICATION ──
   notification: {

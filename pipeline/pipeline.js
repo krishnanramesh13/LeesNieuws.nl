@@ -26,7 +26,7 @@ async function fetchNews() {
   for (const source of enabledSources) {
     try {
       const parsed = await parser.parseURL(source.url)
-      const items = parsed.items.slice(0, source.articlesPerFeed)
+      const items = parsed.items.slice(0, source.articlesPerFeed + 2) // fetch extra for filtering
       for (const item of items) {
         articles.push({
           title: item.title || '',
@@ -42,7 +42,36 @@ async function fetchNews() {
     }
   }
 
-  // Shuffle so we get variety
+  // Filter to prefer Netherlands news
+  if (config.pipeline.preferNetherlandsNews) {
+    const nlKeywords = [
+      'nederland', 'amsterdam', 'rotterdam', 'den haag', 'utrecht',
+      'dutch', 'nederlanden', 'overheid', 'kabinet', 'minister',
+      'gemeente', 'provincie', 'politie', 'rechtbank', 'belasting',
+      'ns ', 'trein', 'a10', 'a1 ', 'a2 ', 'snelweg', 'eindhoven',
+      'groningen', 'maastricht', 'tilburg', 'almere', 'breda',
+      'koning', 'koningin', 'rijksoverheid', 'tweede kamer',
+      'ziekenhuis', 'woningmarkt', 'huurmarkt'
+    ]
+
+    const nlArticles = articles.filter(a => {
+      const text = (a.title + ' ' + a.content).toLowerCase()
+      return nlKeywords.some(kw => text.includes(kw))
+    })
+
+    // Use NL filtered articles if we have enough, otherwise use all
+    const total = config.pipeline.totalA2Articles +
+                  config.pipeline.totalA2PlusArticles +
+                  config.pipeline.totalB1Articles
+
+    if (nlArticles.length >= total) {
+      console.log(`🇳🇱 Filtered to ${nlArticles.length} Netherlands articles`)
+      return nlArticles.sort(() => Math.random() - 0.5)
+    } else {
+      console.log(`⚠️ Only ${nlArticles.length} NL articles found, using all ${articles.length}`)
+    }
+  }
+
   return articles.sort(() => Math.random() - 0.5)
 }
 

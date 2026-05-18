@@ -121,7 +121,14 @@ REGELS voor A2:
 - Schrijf als een boeiend verhaal, niet als droog nieuws
 - EXACT 10 woorden in woordenlijst: 4 werkwoorden + 4 zelfstandige naamwoorden + 2 bijvoeglijke naamwoorden
 - Alle woorden moeten uit het artikel komen
-- Geef ALLEEN JSON terug`
+- Geef ALLEEN JSON terug
+BELANGRIJK:
+- Gebruik ALTIJD correct Nederlands
+- Controleer spelling en grammatica
+- Gebruik spelling.nu als referentie
+- Geen dt-fouten
+- Correcte werkwoordsvervoeging
+- Schrijf volledige zinnen`
 
   const response = await groq.chat.completions.create({
     model: config.groq.model,
@@ -182,7 +189,14 @@ REGELS voor A2+:
 - Gebruik gewone Nederlandse woorden maar voeg 2-3 iets moeilijkere woorden toe
 - Schrijf als een boeiend verhaal met meer details dan A2
 - EXACT 8 woorden in woordenlijst: 3 werkwoorden + 3 zelfstandige naamwoorden + 1 bijvoeglijk naamwoord + 1 uitdrukking
-- Geef ALLEEN JSON terug`
+- Geef ALLEEN JSON terug
+BELANGRIJK:
+- Gebruik ALTIJD correct Nederlands
+- Controleer spelling en grammatica
+- Gebruik spelling.nu als referentie
+- Geen dt-fouten
+- Correcte werkwoordsvervoeging
+- Schrijf volledige zinnen`
 
   const response = await groq.chat.completions.create({
     model: config.groq.model,
@@ -240,7 +254,14 @@ REGELS voor B1:
 - Schrijf journalistiek maar toegankelijk
 - Gebruik typische Nederlandse uitdrukkingen waar mogelijk
 - EXACT 7 items in woordenlijst: 5 moeilijke woorden + 2 uitdrukkingen
-- Geef ALLEEN JSON terug`
+- Geef ALLEEN JSON terug
+BELANGRIJK:
+- Gebruik ALTIJD correct Nederlands
+- Controleer spelling en grammatica
+- Gebruik spelling.nu als referentie
+- Geen dt-fouten
+- Correcte werkwoordsvervoeging
+- Schrijf volledige zinnen`
 
   const response = await groq.chat.completions.create({
     model: config.groq.model,
@@ -410,39 +431,42 @@ async function main() {
     console.log('\n📗 Processing A2 articles...')
     const a2Rewritten = []
     for (const article of a2News) {
-    try {
+      try {
         const result = await rewriteA2(article)
-        a2Rewritten.push(result)
+        const checked = await checkDutch(result)  // ← ADD THIS
+        a2Rewritten.push(checked)
         await new Promise(r => setTimeout(r, config.pipeline.delayBetweenArticles))
-    } catch (e) {
+      } catch (e) {
         console.log(`⚠️ A2 failed: ${article.title} — ${e.message}`)
-    }
+      }
     }
 
     // 4. Rewrite A2+ articles
     console.log('\n📙 Processing A2+ articles...')
     const a2PlusRewritten = []
     for (const article of a2PlusNews) {
-    try {
+      try {
         const result = await rewriteA2Plus(article)
-        a2PlusRewritten.push(result)
+        const checked = await checkDutch(result)  // ← ADD THIS
+        a2PlusRewritten.push(checked)
         await new Promise(r => setTimeout(r, config.pipeline.delayBetweenArticles))
-    } catch (e) {
+      } catch (e) {
         console.log(`⚠️ A2+ failed: ${article.title} — ${e.message}`)
-    }
+      }
     }
 
     // 5. Rewrite B1 articles
     console.log('\n📘 Processing B1 articles...')
     const b1Rewritten = []
     for (const article of b1News) {
-    try {
+      try {
         const result = await rewriteB1(article)
-        b1Rewritten.push(result)
+        const checked = await checkDutch(result)  // ← ADD THIS
+        b1Rewritten.push(checked)
         await new Promise(r => setTimeout(r, config.pipeline.delayBetweenArticles))
-    } catch (e) {
+      } catch (e) {
         console.log(`⚠️ B1 failed: ${article.title} — ${e.message}`)
-    }
+      }
     }
 
     console.log(`\n✅ Rewrote: ${a2Rewritten.length} A2 + ${a2PlusRewritten.length} A2+ + ${b1Rewritten.length} B1`)
@@ -472,6 +496,50 @@ async function main() {
     console.error('❌ Pipeline failed:', e)
     process.exit(1)
   }
+}
+
+// ── CHECK DUTCH QUALITY ──
+async function checkDutch(article) {
+  console.log(`🔍 Checking Dutch: ${article.kop}`)
+  try {
+    const prompt = `Je bent een Nederlandse taaldocent NT2.
+Controleer deze tekst op taalfouten en verbeter ze.
+
+Tekst: "${article.tekst.join(' ')}"
+
+Geef ALLEEN de verbeterde tekst terug als JSON array van zinnen/alinea's:
+["verbeterde zin 1", "verbeterde zin 2", ...]
+
+Controleer op:
+- dt-fouten (wordt/word, heeft/heft, fietst/fietsd)
+- Werkwoordsvervoeging (ik loop, hij loopt)
+- Spelling
+- Zinsbouw
+- Correct gebruik van de/het
+- Geen Engelse woorden tenzij noodzakelijk
+- Natuurlijk klinkend Nederlands
+
+Geef ALLEEN de JSON array terug, niets anders.`
+
+    const response = await groq.chat.completions.create({
+      model: config.groq.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.2,
+      max_tokens: 1000,
+    })
+
+    const text = response.choices[0].message.content.trim()
+    const clean = text.replace(/```json|```/g, '').trim()
+    const improved = JSON.parse(clean)
+
+    if (Array.isArray(improved) && improved.length > 0) {
+      article.tekst = improved
+      console.log(`  ✅ Dutch quality improved!`)
+    }
+  } catch (e) {
+    console.log(`  ⚠️ Quality check skipped: ${e.message}`)
+  }
+  return article
 }
 
 main()

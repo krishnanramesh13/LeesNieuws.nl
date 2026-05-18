@@ -395,7 +395,7 @@ async function sendNotification(saved) {
           </div>
           <div style="background:#fff;border:1px solid #dde8f5;border-radius:8px;padding:14px;font-family:monospace;font-size:13px;line-height:1.8;color:#1a1410;white-space:pre-wrap">🇳🇱 Vandaag op NieuwsLeren.nl:
 
-        ${[...a2Articles, ...a2PlusArticles, ...b1Articles].slice(0,3).map(a => • ${a.title}).join('\n')}
+        ${[...a2Articles, ...a2PlusArticles, ...b1Articles].slice(0,3).map(a => `- ${a.title}`).join('\n')}
 
         Lees gratis 👉 nieuwsleren.nl</div>
         </div>

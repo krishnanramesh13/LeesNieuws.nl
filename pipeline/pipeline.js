@@ -346,6 +346,38 @@ async function sendNotification(saved) {
             📝 Open Sanity Studio →
             </a>
         </div>
+        // Add this after the Sanity Studio button
+        <div style="margin-top:20px;background:#f0f7ff;border:1px solid #c8d8f0;border-radius:10px;padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a5aaa;margin-bottom:10px">
+            📋 Klaar-om-te-kopiëren Facebook post
+          </div>
+          <div style="background:#fff;border:1px solid #dde8f5;border-radius:8px;padding:14px;font-family:monospace;font-size:13px;line-height:1.8;color:#1a1410;white-space:pre-wrap">📰 Vandaag op NieuwsLeren.nl — ${new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long' })}
+
+        ${a2Articles.map(a => 📗 A2: ${a.title}).join('\n')}
+
+        ${a2PlusArticles.map(a => 📙 A2+: ${a.title}).join('\n')}
+
+        ${b1Articles.map(a => 📘 B1: ${a.title}).join('\n')}
+
+        Lees alle artikelen gratis met woordenlijst
+        en audio op 👉 nieuwsleren.nl 🇳🇱
+
+        #nederlandsleren #learnDutch #nieuwsleren
+        #dutchlanguage #nederlandstalig</div>
+          <p style="font-size:11px;color:#9a9088;margin-top:8px;margin-bottom:0">
+            👆 Kopieer deze tekst en plak hem in je Facebook groepen!
+          </p>
+        </div>
+        <div style="margin-top:12px;background:#f0faf6;border:1px solid #b5ddd6;border-radius:10px;padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a7a5e;margin-bottom:10px">
+            💬 WhatsApp bericht
+          </div>
+          <div style="background:#fff;border:1px solid #dde8f5;border-radius:8px;padding:14px;font-family:monospace;font-size:13px;line-height:1.8;color:#1a1410;white-space:pre-wrap">🇳🇱 Vandaag op NieuwsLeren.nl:
+
+        ${[...a2Articles, ...a2PlusArticles, ...b1Articles].slice(0,3).map(a => • ${a.title}).join('\n')}
+
+        Lees gratis 👉 nieuwsleren.nl</div>
+        </div>
         </div>
     `,
     })

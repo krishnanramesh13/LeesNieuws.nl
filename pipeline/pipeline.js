@@ -376,9 +376,9 @@ async function sendNotification(saved) {
 
         ${a2Articles.map(a => `A2: ${a.title}`).join('\n')}
 
-        ${a2PlusArticles.map(a => 📙 A2+: ${a.title}).join('\n')}
+        ${a2PlusArticles.map(a => `A2+: ${a.title}`).join('\n')}
 
-        ${b1Articles.map(a => 📘 B1: ${a.title}).join('\n')}
+        ${b1Articles.map(a => `📘 B1: ${a.title}`).join('\n')}
 
         Lees alle artikelen gratis met woordenlijst
         en audio op 👉 nieuwsleren.nl 🇳🇱

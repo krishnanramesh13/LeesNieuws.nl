@@ -353,7 +353,7 @@ async function sendNotification(saved) {
           </div>
           <div style="background:#fff;border:1px solid #dde8f5;border-radius:8px;padding:14px;font-family:monospace;font-size:13px;line-height:1.8;color:#1a1410;white-space:pre-wrap">📰 Vandaag op NieuwsLeren.nl — ${new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long' })}
 
-        ${a2Articles.map(a => 📗 A2: ${a.title}).join('\n')}
+        ${a2Articles.map(a => `A2: ${a.title}`).join('\n')}
 
         ${a2PlusArticles.map(a => 📙 A2+: ${a.title}).join('\n')}
 
